@@ -1,0 +1,7 @@
+torch
+nvidia-ml-py
+hydra-core
+omegaconf
+torchmetrics
+torch_geometric
+git+ssh://git@github.com/cyyever/naive_python_lib.git@main#egg=cyy_naive_lib
