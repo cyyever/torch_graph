@@ -33,3 +33,6 @@ def register_graph_dataset_constructors() -> None:
 
     for name, constructor in dataset_constructors.items():
         register_dataset_constructors(DatasetType.Graph, name, constructor)
+
+
+register_graph_dataset_constructors()
