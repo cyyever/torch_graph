@@ -4,11 +4,11 @@ import torch
 import torch_geometric
 from cyy_naive_lib.log import get_logger
 from cyy_torch_toolbox.dataloader import global_dataloader_factory
-from cyy_torch_toolbox.dataset.util import GraphDatasetUtil
 from cyy_torch_toolbox.dataset_collection import DatasetCollection
 from cyy_torch_toolbox.ml_type import DatasetType, MachineLearningPhase
 from torch_geometric.loader import NeighborLoader
 
+from ..dataset.util import GraphDatasetUtil
 from ..model_evaluator import GraphModelEvaluator
 from .pyg_dataloader import RandomNodeLoader
 
