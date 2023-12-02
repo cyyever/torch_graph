@@ -15,6 +15,7 @@ setuptools.setup(
         "cyy_torch_graph",
         "cyy_torch_graph/dataset",
         "cyy_torch_graph/model_evaluator",
+        "cyy_torch_graph/data_pipeline",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
