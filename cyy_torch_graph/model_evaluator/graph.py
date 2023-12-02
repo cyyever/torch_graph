@@ -6,7 +6,7 @@ import torch_geometric.utils
 from cyy_naive_lib.log import get_logger
 from cyy_torch_toolbox.dataset_collection import DatasetCollection
 from cyy_torch_toolbox.ml_type import MachineLearningPhase
-from cyy_torch_toolbox.model_evaluator.base import ModelEvaluator
+from cyy_torch_toolbox.model.evaluator import ModelEvaluator
 from cyy_torch_toolbox.tensor import tensor_to
 
 from ..dataset.util import GraphDatasetUtil
