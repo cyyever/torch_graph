@@ -3,14 +3,17 @@ import math
 import torch
 import torch_geometric
 from cyy_naive_lib.log import get_logger
+from cyy_torch_toolbox.data_transform import global_data_transform_factory
 from cyy_torch_toolbox.dataloader import global_dataloader_factory
 from cyy_torch_toolbox.dataset_collection import DatasetCollection
-from cyy_torch_toolbox.ml_type import DatasetType, MachineLearningPhase
+from cyy_torch_toolbox.ml_type import (DatasetType, MachineLearningPhase,
+                                       TransformType)
 from torch_geometric.loader import NeighborLoader
 
 from ..dataset.util import GraphDatasetUtil
 from ..model_evaluator import GraphModelEvaluator
 from .pyg_dataloader import RandomNodeLoader
+from .transform import pyg_data_extraction
 
 
 def get_dataloader(
@@ -54,3 +57,15 @@ def get_dataloader(
 
 
 global_dataloader_factory.register(DatasetType.Graph, get_dataloader)
+
+
+def append_transforms_to_dc(dc, model_evaluator=None) -> None:
+    if model_evaluator is None:
+        for _, transform in dc.foreach_transform():
+            transform.clear(TransformType.ExtractData)
+            transform.append(
+                key=TransformType.ExtractData, transform=pyg_data_extraction
+            )
+
+
+global_data_transform_factory.register(DatasetType.Graph, append_transforms_to_dc)
