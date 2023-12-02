@@ -4,9 +4,12 @@ import torch
 import torch.utils.data
 import torch_geometric
 from cyy_naive_lib.reflection import get_class_attrs
+from cyy_torch_toolbox.dataset.util import global_dataset_util_factor
 from cyy_torch_toolbox.dataset_collection.dataset_repository import \
     register_dataset_constructors
 from cyy_torch_toolbox.ml_type import DatasetType
+
+from .util import GraphDatasetUtil
 
 
 def register_graph_dataset_constructors() -> None:
@@ -36,3 +39,4 @@ def register_graph_dataset_constructors() -> None:
 
 
 register_graph_dataset_constructors()
+global_dataset_util_factor.register(DatasetType.Graph, GraphDatasetUtil)
