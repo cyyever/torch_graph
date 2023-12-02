@@ -34,7 +34,7 @@ def get_dataloader(
         return RandomNodeLoader(node_indices=input_nodes.tolist(), **kwargs)
 
     if "batch_number" in kwargs:
-        batch_number = kwargs["batch_number"]
+        batch_number = kwargs.pop("batch_number")
         input_number = input_nodes.numel()
         assert input_number >= batch_number
         kwargs["batch_size"] = math.ceil(input_number / batch_number)
@@ -49,7 +49,7 @@ def get_dataloader(
         assert kwargs["batch_size"] * batch_number >= input_number
     return NeighborLoader(
         data=util.get_graph(0),
-        num_neighbors=[kwargs.get("num_neighbor", 10)] * model_evaluator.neighbour_hop,
+        num_neighbors=[kwargs.pop("num_neighbor", 10)] * model_evaluator.neighbour_hop,
         input_nodes=input_nodes,
         transform=lambda data: data.to_dict(),
         **kwargs,
