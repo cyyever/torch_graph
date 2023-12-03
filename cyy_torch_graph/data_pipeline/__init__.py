@@ -1,10 +1,12 @@
 import math
 
 import torch
+import torch.utils.data
 import torch_geometric
+import torch_geometric.utils
 from cyy_naive_lib.log import get_logger
+from cyy_torch_toolbox.data_pipeline.loader import global_dataloader_factory
 from cyy_torch_toolbox.data_transform import global_data_transform_factory
-from cyy_torch_toolbox.dataloader import global_dataloader_factory
 from cyy_torch_toolbox.dataset_collection import DatasetCollection
 from cyy_torch_toolbox.ml_type import (DatasetType, MachineLearningPhase,
                                        TransformType)
