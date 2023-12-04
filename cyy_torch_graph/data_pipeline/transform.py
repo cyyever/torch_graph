@@ -1,6 +1,6 @@
 from typing import Any
 
-from cyy_torch_toolbox.data_transform.common import default_data_extraction
+from cyy_torch_toolbox.data_pipeline.common import default_data_extraction
 
 
 def pyg_data_extraction(data: Any) -> dict | None:

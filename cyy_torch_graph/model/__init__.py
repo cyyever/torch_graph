@@ -1,6 +1,6 @@
 import functools
 
-from cyy_torch_toolbox.dataset_collection import DatasetCollection
+from cyy_torch_toolbox.dataset.collection import DatasetCollection
 from cyy_torch_toolbox.factory import Factory
 from cyy_torch_toolbox.ml_type import DatasetType, MachineLearningPhase
 from cyy_torch_toolbox.model import global_model_factory
