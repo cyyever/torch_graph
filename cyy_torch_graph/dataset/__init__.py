@@ -4,9 +4,9 @@ import torch
 import torch.utils.data
 import torch_geometric
 from cyy_naive_lib.reflection import get_class_attrs
+from cyy_torch_toolbox import DatasetType
 from cyy_torch_toolbox.dataset.repository import register_dataset_constructors
 from cyy_torch_toolbox.dataset.util import global_dataset_util_factor
-from cyy_torch_toolbox.ml_type import DatasetType
 
 from .util import GraphDatasetUtil
 
