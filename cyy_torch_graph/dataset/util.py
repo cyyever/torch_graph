@@ -1,6 +1,6 @@
 import copy
 from collections.abc import Iterable
-from typing import Any
+from typing import Any, Generator
 
 import torch
 import torch.utils
@@ -16,6 +16,21 @@ class GraphDatasetUtil(DatasetUtil):
             return [dataset["mask"] for dataset in self.dataset]
         mask = torch.ones((self.get_original_graph(0).x.shape[0],), dtype=torch.bool)
         return [mask]
+
+    def get_raw_samples(self, indices: Iterable | None = None) -> Generator:
+        if indices is not None:
+            indices = set(indices)
+        mask = self.get_mask()
+        assert len(mask) == 1
+        graph = self.get_original_graph(0)
+        for idx, flag in enumerate(mask[0].tolist()):
+            if not flag:
+                continue
+            if indices is None or idx in indices:
+                yield idx, {
+                    "target": graph.y[idx],
+                    "index": idx,
+                }
 
     def get_edge_index(self, graph_index: int) -> torch.Tensor:
         graph = self.dataset[graph_index]
