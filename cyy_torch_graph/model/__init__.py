@@ -3,8 +3,13 @@ import functools
 from cyy_torch_toolbox.dataset.collection import DatasetCollection
 from cyy_torch_toolbox.factory import Factory
 from cyy_torch_toolbox.ml_type import DatasetType, MachineLearningPhase
-from cyy_torch_toolbox.model import global_model_factory
+from cyy_torch_toolbox.model import (global_model_evaluator_factory,
+                                     global_model_factory)
 from cyy_torch_toolbox.model.repositary import get_model_info
+
+from .evaluator import GraphModelEvaluator
+
+global_model_evaluator_factory.register(DatasetType.Graph, GraphModelEvaluator)
 
 
 def get_model(

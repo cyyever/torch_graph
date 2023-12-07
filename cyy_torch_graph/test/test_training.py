@@ -1,6 +1,5 @@
 import cyy_torch_graph  # noqa: F401
-from cyy_torch_toolbox.default_config import Config
-from cyy_torch_toolbox.ml_type import ExecutorHookPoint, StopExecutingException
+from cyy_torch_toolbox import Config, ExecutorHookPoint, StopExecutingException
 
 
 def stop_training(*args, **kwargs):

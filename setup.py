@@ -14,7 +14,6 @@ setuptools.setup(
     packages=[
         "cyy_torch_graph",
         "cyy_torch_graph/dataset",
-        "cyy_torch_graph/model_evaluator",
         "cyy_torch_graph/model",
         "cyy_torch_graph/data_pipeline",
     ],
