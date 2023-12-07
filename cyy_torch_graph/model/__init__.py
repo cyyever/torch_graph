@@ -16,14 +16,11 @@ def get_model(
     model_constructor_info: dict, dataset_collection: DatasetCollection, **kwargs
 ) -> dict:
     final_model_kwargs: dict = {}
-    match dataset_collection.dataset_type:
-        case DatasetType.Graph:
-            if "num_features" not in kwargs:
-                final_model_kwargs[
-                    "num_features"
-                ] = dataset_collection.get_original_dataset(
-                    phase=MachineLearningPhase.Training
-                ).num_features
+    invalid_keywords = kwargs.get("invalid_keywords", set())
+    if "num_features" not in kwargs and "num_features" not in invalid_keywords:
+        final_model_kwargs["num_features"] = dataset_collection.get_original_dataset(
+            phase=MachineLearningPhase.Training
+        ).num_features
 
     final_model_kwargs |= kwargs
     return model_constructor_info["constructor"](**final_model_kwargs)
