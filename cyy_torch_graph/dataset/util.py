@@ -6,8 +6,7 @@ import torch
 import torch.utils
 import torch_geometric.data
 import torch_geometric.utils
-from cyy_torch_toolbox.dataset.util import DatasetUtil
-from cyy_torch_toolbox.ml_type import MachineLearningPhase
+from cyy_torch_toolbox import DatasetUtil, MachineLearningPhase
 
 
 class GraphDatasetUtil(DatasetUtil):
