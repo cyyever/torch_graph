@@ -39,12 +39,6 @@ def get_dataloader(
         input_number = input_nodes.numel()
         assert input_number >= batch_number
         kwargs["batch_size"] = math.ceil(input_number / batch_number)
-        get_logger().debug(
-            "batch_number %s input size %s batch_size %s",
-            batch_number,
-            input_number,
-            kwargs["batch_size"],
-        )
         assert kwargs["batch_size"] >= 1
         while kwargs["batch_size"] * (batch_number - 1) >= input_number:
             kwargs["batch_size"] -= 1
