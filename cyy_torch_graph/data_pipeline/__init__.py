@@ -46,7 +46,9 @@ def get_dataloader(
             kwargs["batch_size"],
         )
         assert kwargs["batch_size"] >= 1
-        assert kwargs["batch_size"] * (batch_number - 1) < input_number
+        while kwargs["batch_size"] * (batch_number - 1) >= input_number:
+            kwargs["batch_size"] -= 1
+            assert kwargs["batch_size"] >= 1
         assert kwargs["batch_size"] * batch_number >= input_number
     return NeighborLoader(
         data=util.get_graph(0),
