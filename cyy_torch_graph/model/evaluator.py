@@ -35,10 +35,8 @@ class GraphModelEvaluator(ModelEvaluator):
                 .get_original_graph(0)
                 .y.shape[0]
             )
-            print(max(n_id),kwargs["y"].shape)
             kwargs["y"] = kwargs["y"].index_select(0, n_id)
         batch_mask = self.get_mask(phase=kwargs["phase"], device=kwargs["device"])[n_id]
-        print(batch_mask.shape, kwargs["y"].shape, kwargs["x"].shape, "111")
 
         y = tensor_to(
             kwargs["y"], device=kwargs["device"], non_blocking=kwargs["non_blocking"]
