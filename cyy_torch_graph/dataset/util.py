@@ -10,11 +10,38 @@ from cyy_torch_toolbox import DatasetUtil, MachineLearningPhase
 
 
 class GraphDatasetUtil(DatasetUtil):
+    def __get_mask_shape(self, graph_index) -> int:
+        annotated_node_number = self.get_original_graph(
+            graph_index=graph_index
+        ).x.shape[0]
+        y = self.get_original_graph(graph_index=0).y
+        match y:
+            case torch.Tensor():
+                annotated_node_number = min(annotated_node_number, y.shape[0])
+            case _:
+                raise NotImplementedError(y)
+        return annotated_node_number
+
     def get_mask(self) -> list[torch.Tensor]:
         if hasattr(self.dataset[0], "mask") or "mask" in self.dataset[0]:
             return [dataset["mask"] for dataset in self.dataset]
-        mask = torch.ones((self.get_original_graph(0).x.shape[0],), dtype=torch.bool)
-        return [mask]
+        masks = []
+        for graph_index, graph in enumerate(self.dataset):
+            if hasattr(graph, "mask") or "mask" in graph:
+                masks.append(graph["mask"])
+                continue
+            mask_shape = self.__get_mask_shape(graph_index)
+            if self.get_original_graph(graph_index=graph_index).x.shape[0] > mask_shape:
+                mask = torch.zeros(
+                    (self.get_original_graph(graph_index=graph_index).x.shape[0],),
+                    dtype=torch.bool,
+                )
+                for i in range(mask_shape):
+                    mask[i] = True
+            else:
+                mask = torch.ones((mask_shape,), dtype=torch.bool)
+            masks.append(mask)
+        return masks
 
     def get_raw_samples(self, indices: Iterable | None = None) -> Generator:
         if indices is not None:
@@ -35,7 +62,15 @@ class GraphDatasetUtil(DatasetUtil):
         graph = self.dataset[graph_index]
         if "edge_index" in graph:
             return graph["edge_index"]
-        return self.get_original_graph(graph_index).edge_index
+        graph = self.get_original_graph(graph_index)
+        if graph.x.shape[0] == graph.y.shape[0]:
+            return graph.edge_index
+        assert graph.x.shape[0] > graph.y.shape[0]
+        mask = (graph.edge_index[0] < graph.y.shape[0]) & (
+            graph.edge_index[1] < graph.y.shape[0]
+        )
+        graph["edge_index"] = graph.edge_index[:, mask]
+        return graph["edge_index"]
 
     def get_graph(self, graph_index: int) -> Any:
         original_graph = self.get_original_graph(graph_index=graph_index)
@@ -61,7 +96,6 @@ class GraphDatasetUtil(DatasetUtil):
         node_indices = torch.tensor(list(node_indices))
         result = []
         for idx, graph_dict in enumerate(self.dataset):
-            graph = self.get_original_graph(idx)
             if isinstance(graph_dict, dict):
                 tmp = graph_dict.copy()
             else:
@@ -70,7 +104,7 @@ class GraphDatasetUtil(DatasetUtil):
                     "original_dataset": self.dataset,
                 }
             tmp["mask"] = torch_geometric.utils.index_to_mask(
-                node_indices, size=graph.x.shape[0]
+                node_indices, size=self.get_mask()[idx].shape[0]
             )
             result.append(tmp)
         return result

@@ -34,6 +34,11 @@ def register_graph_dataset_constructors() -> None:
             dataset_constructors[f"Coauthor_{name}"] = functools.partial(
                 dataset_constructors["Coauthor"], name=name
             )
+    if "AttributedGraphDataset" in dataset_constructors:
+        for name in ["TWeibo", "MAG"]:
+            dataset_constructors[name] = functools.partial(
+                dataset_constructors["AttributedGraphDataset"], name=name
+            )
 
     for name, constructor in dataset_constructors.items():
         register_dataset_constructors(DatasetType.Graph, name, constructor)
