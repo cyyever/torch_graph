@@ -4,7 +4,6 @@ import torch
 import torch.utils.data
 import torch_geometric
 import torch_geometric.utils
-from cyy_naive_lib.log import get_logger
 from cyy_torch_toolbox import (DatasetCollection, DatasetType,
                                MachineLearningPhase, TransformType)
 from cyy_torch_toolbox.data_pipeline import global_data_transform_factory
