@@ -3,7 +3,7 @@ import functools
 import torch
 import torch.utils.data
 import torch_geometric.datasets
-from cyy_naive_lib.reflection import get_class_attrs
+from cyy_naive_lib.reflection import get_class_attrs, get_kwarg_names
 from cyy_torch_toolbox import DatasetType
 from cyy_torch_toolbox.dataset import global_dataset_collection_factory
 from cyy_torch_toolbox.dataset.repository import register_dataset_constructors
@@ -20,25 +20,21 @@ def register_graph_dataset_constructors() -> None:
             repository,
             filter_fun=lambda k, v: issubclass(v, torch.utils.data.Dataset),
         )
-    if "Planetoid" in dataset_constructors:
-        for repository in ["Cora", "CiteSeer", "PubMed"]:
-            dataset_constructors[repository] = functools.partial(
-                dataset_constructors["Planetoid"], name=repository, split="full"
+    for parent_dataset, sub_dataset_list in {
+        "Planetoid": ["Cora", "CiteSeer", "PubMed"],
+        "Coauthor": ["CS", "Physics"],
+        "Amazon": ["Computers", "Photo"],
+        "AttributedGraphDataset": ["TWeibo", "MAG"],
+    }.items():
+        assert parent_dataset in dataset_constructors
+        constructor_kwargs = get_kwarg_names(dataset_constructors[parent_dataset])
+        for name in sub_dataset_list:
+            constructor = functools.partial(
+                dataset_constructors[parent_dataset], name=name
             )
-        for name in ["Cora", "CiteSeer", "PubMed"]:
-            dataset_constructors[f"Planetoid_{name}"] = functools.partial(
-                dataset_constructors["Planetoid"], name=name, split="full"
-            )
-    if "Coauthor" in dataset_constructors:
-        for name in ["CS", "Physics"]:
-            dataset_constructors[f"Coauthor_{name}"] = functools.partial(
-                dataset_constructors["Coauthor"], name=name
-            )
-    if "AttributedGraphDataset" in dataset_constructors:
-        for name in ["TWeibo", "MAG"]:
-            dataset_constructors[name] = functools.partial(
-                dataset_constructors["AttributedGraphDataset"], name=name
-            )
+            if "split" in constructor_kwargs:
+                constructor = functools.partial(constructor, split="full")
+            dataset_constructors[f"{parent_dataset}_{name}"] = constructor
 
     for name, constructor in dataset_constructors.items():
         register_dataset_constructors(DatasetType.Graph, name, constructor)
