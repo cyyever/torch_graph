@@ -1,4 +1,3 @@
-import copy
 from collections.abc import Iterable
 from typing import Any, Generator
 
@@ -23,6 +22,9 @@ class GraphDatasetUtil(DatasetUtil):
         return annotated_node_number
 
     def get_mask(self) -> list[torch.Tensor]:
+        return self.get_node_mask()
+
+    def get_node_mask(self) -> list[torch.Tensor]:
         if hasattr(self.dataset[0], "mask") or "mask" in self.dataset[0]:
             return [dataset["mask"] for dataset in self.dataset]
         masks = []
@@ -110,9 +112,18 @@ class GraphDatasetUtil(DatasetUtil):
         return result
 
     def get_edge_subset(self, graph_index: int, edge_index: torch.Tensor) -> list[dict]:
-        dataset = copy.copy(self.dataset)
-        dataset[graph_index]["edge_index"] = edge_index
-        return dataset
+        result = []
+        for idx, graph_dict in enumerate(self.dataset):
+            if isinstance(graph_dict, dict):
+                tmp = graph_dict.copy()
+            else:
+                tmp = {
+                    "graph_index": idx,
+                    "original_dataset": self.dataset,
+                }
+            tmp["edge_index"] = edge_index
+            result.append(tmp)
+        return result
 
     def decompose(self) -> None | dict:
         mapping: dict = {
