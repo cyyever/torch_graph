@@ -14,6 +14,7 @@ class GraphModelEvaluator(ModelEvaluator):
         super().__init__(**kwargs)
         self.__dc = dataset_collection
         self.__masks: dict = {}
+        self.__mask_indices: dict = {}
         get_logger().debug("use neighbour_hop %s", self.neighbour_hop)
 
     @property
@@ -25,8 +26,7 @@ class GraphModelEvaluator(ModelEvaluator):
         return self.__from_neighbor_loader(**kwargs)
 
     def __from_neighbor_loader(self, **kwargs: Any) -> dict:
-        n_id = kwargs.pop("n_id")
-        kwargs["n_id"] = n_id
+        n_id = kwargs["n_id"]
         inputs = {"edge_index": kwargs["edge_index"], "x": kwargs["x"], "n_id": n_id}
         if kwargs["y"].shape[0] != kwargs["x"].shape[0]:
             assert (
@@ -53,12 +53,23 @@ class GraphModelEvaluator(ModelEvaluator):
         assert mask is not None
         return mask
 
+    def get_mask_indices(self, phase: MachineLearningPhase) -> set:
+        mask_indices = self.__mask_indices.get(phase, None)
+        if mask_indices is not None:
+            return mask_indices
+        self.__mask_indices[phase] = set(
+            torch_geometric.utils.mask_to_index(self.__masks[phase]).tolist()
+        )
+        return self.__mask_indices[phase]
+
     def _compute_loss(self, output: torch.Tensor, **kwargs: Any) -> dict:
         extra_res = {}
         n_id = kwargs.pop("n_id")
         batch_mask = kwargs.pop("batch_mask")
         if kwargs.pop("need_sample_indices", False):
-            n_id = n_id.to(device=batch_mask.device, non_blocking=True)
-            extra_res = {"sample_indices": n_id[batch_mask].tolist()}
-
+            extra_res = {
+                "sample_indices": self.get_mask_indices(
+                    phase=kwargs["phase"]
+                ).intersection(set(n_id.tolist()))
+            }
         return super()._compute_loss(output=output[batch_mask], **kwargs) | extra_res
