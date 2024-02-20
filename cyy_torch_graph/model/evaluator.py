@@ -58,6 +58,7 @@ class GraphModelEvaluator(ModelEvaluator):
         n_id = kwargs.pop("n_id")
         batch_mask = kwargs.pop("batch_mask")
         if kwargs.pop("need_sample_indices", False):
+            n_id = n_id.to(device=batch_mask.device, non_blocking=True)
             extra_res = {"sample_indices": n_id[batch_mask].tolist()}
 
         return super()._compute_loss(output=output[batch_mask], **kwargs) | extra_res
