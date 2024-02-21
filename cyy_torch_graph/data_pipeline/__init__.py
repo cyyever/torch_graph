@@ -35,6 +35,7 @@ def get_dataloader(
 
     if "batch_number" in kwargs:
         batch_number = kwargs.pop("batch_number")
+        assert batch_number > 0
         input_number = input_nodes.numel()
         assert input_number >= batch_number
         kwargs["batch_size"] = math.ceil(input_number / batch_number)
@@ -42,7 +43,8 @@ def get_dataloader(
         while kwargs["batch_size"] * (batch_number - 1) >= input_number:
             kwargs["batch_size"] -= 1
             assert kwargs["batch_size"] >= 1
-        assert kwargs["batch_size"] * batch_number >= input_number
+        if kwargs["batch_size"] * batch_number < input_number:
+            kwargs["drop_last"] = True
     return NeighborLoader(
         data=util.get_graph(0),
         num_neighbors=[kwargs.pop("num_neighbor", 10)] * model_evaluator.neighbour_hop,
