@@ -49,6 +49,7 @@ def get_dataloader(
                 break
             if not ensure_batch_size_cover:
                 kwargs["drop_last"] = True
+                break
             else:
                 batch_number -= 1
                 assert batch_number > 0
