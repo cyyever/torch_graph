@@ -8,6 +8,7 @@ from cyy_torch_toolbox import DatasetType
 from cyy_torch_toolbox.dataset import global_dataset_collection_factory
 from cyy_torch_toolbox.dataset.repository import register_dataset_constructors
 from cyy_torch_toolbox.dataset.util import global_dataset_util_factor
+from ogb.nodeproppred import PygNodePropPredDataset
 
 from .collection import GraphDatasetCollection
 from .util import GraphDatasetUtil
@@ -37,6 +38,9 @@ def register_graph_dataset_constructors() -> None:
             dataset_constructors[f"{parent_dataset}_{name}"] = constructor
 
     for name, constructor in dataset_constructors.items():
+        register_dataset_constructors(DatasetType.Graph, name, constructor)
+    for name in ("ogbn-products",):
+        constructor = functools.partial(PygNodePropPredDataset, name=name)
         register_dataset_constructors(DatasetType.Graph, name, constructor)
 
 
