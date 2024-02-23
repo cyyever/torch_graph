@@ -13,12 +13,8 @@ class GraphDatasetUtil(DatasetUtil):
         annotated_node_number = self.get_original_graph(
             graph_index=graph_index
         ).x.shape[0]
-        y = self.get_original_graph(graph_index=0).y
-        match y:
-            case torch.Tensor():
-                annotated_node_number = min(annotated_node_number, y.shape[0])
-            case _:
-                raise NotImplementedError(y)
+        targets = self.get_targets(graph_index)
+        annotated_node_number = min(annotated_node_number, targets.shape[0])
         return annotated_node_number
 
     def get_mask(self) -> list[torch.Tensor]:
@@ -58,26 +54,33 @@ class GraphDatasetUtil(DatasetUtil):
             indices = set(indices)
         mask = self.get_mask()
         assert len(mask) == 1
-        graph = self.get_original_graph(0)
+        targets = self.get_targets(0)
         for idx, flag in enumerate(mask[0].tolist()):
             if not flag:
                 continue
             if indices is None or idx in indices:
                 yield idx, {
-                    "target": graph.y[idx],
+                    "target": targets[idx],
                     "index": idx,
                 }
+
+    def get_targets(self, graph_index: int) -> torch.Tensor:
+        targets = self.get_original_graph(graph_index).y
+        if len(targets.shape) == 2 and targets.shape[-1] == 1:
+            return targets.view(-1)
+        return targets
 
     def get_edge_index(self, graph_index: int) -> torch.Tensor:
         graph = self.dataset[graph_index]
         if "edge_index" in graph:
             return graph["edge_index"]
         graph = self.get_original_graph(graph_index)
-        if graph.x.shape[0] == graph.y.shape[0]:
+        targets = self.get_targets(graph_index=graph_index)
+        if graph.x.shape[0] == targets.shape[0]:
             return graph.edge_index
-        assert graph.x.shape[0] > graph.y.shape[0]
-        mask = (graph.edge_index[0] < graph.y.shape[0]) & (
-            graph.edge_index[1] < graph.y.shape[0]
+        assert graph.x.shape[0] > targets.shape[0]
+        mask = (graph.edge_index[0] < targets.shape[0]) & (
+            graph.edge_index[1] < targets.shape[0]
         )
         graph["edge_index"] = graph.edge_index[:, mask]
         return graph["edge_index"]
