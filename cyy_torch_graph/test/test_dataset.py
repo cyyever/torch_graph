@@ -4,3 +4,4 @@ from cyy_torch_toolbox import create_dataset_collection
 
 def test_dataset() -> None:
     create_dataset_collection("Planetoid_Cora")
+    create_dataset_collection("ogbn-products")
