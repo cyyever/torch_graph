@@ -4,6 +4,7 @@ import torch
 import torch.utils.data
 import torch_geometric
 import torch_geometric.utils
+from cyy_naive_lib.log import get_logger
 from cyy_torch_toolbox import (DatasetCollection, DatasetType,
                                MachineLearningPhase, TransformType)
 from cyy_torch_toolbox.data_pipeline import global_data_transform_factory
@@ -53,6 +54,7 @@ def get_dataloader(
             assert batch_number > 0
     if not ensure_batch_size_cover:
         kwargs["drop_last"] = True
+        get_logger().warning("drop_last is used")
     return NeighborLoader(
         data=util.get_graph(0),
         num_neighbors=[kwargs.pop("num_neighbor", 10)] * model_evaluator.neighbour_hop,
