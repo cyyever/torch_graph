@@ -34,7 +34,7 @@ def get_dataloader(
     if not kwargs.get("sample_neighbor", True):
         return RandomNodeLoader(node_indices=input_nodes.tolist(), **kwargs)
 
-    ensure_batch_size_cover = kwargs.pop("ensure_batch_size_cover", False)
+    ensure_batch_size_cover = kwargs.pop("ensure_batch_size_cover", True)
     if "batch_number" in kwargs:
         batch_number = kwargs.pop("batch_number")
         assert batch_number > 0
