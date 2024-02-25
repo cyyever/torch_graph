@@ -55,7 +55,7 @@ def get_dataloader(
                 break
             batch_number -= 1
             assert batch_number > 0
-    kwargs.pop("ensure_batch_size_cover")
+    kwargs.pop("ensure_batch_size_cover", None)
     return NeighborLoader(
         data=util.get_graph(0),
         num_neighbors=[kwargs.pop("num_neighbor", 10)] * model_evaluator.neighbour_hop,
