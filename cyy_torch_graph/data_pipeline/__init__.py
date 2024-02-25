@@ -46,15 +46,12 @@ def get_dataloader(
             while kwargs["batch_size"] * (batch_number - 1) >= input_number:
                 kwargs["batch_size"] -= 1
                 assert kwargs["batch_size"] >= 1
-            if kwargs["batch_size"] * batch_number >= input_number:
+            if kwargs["batch_size"] * batch_number > input_number:
                 if not ensure_batch_size_cover:
                     kwargs["drop_last"] = True
                     get_logger().warning("drop_last is used")
-                break
-            if not ensure_batch_size_cover:
-                break
-            batch_number -= 1
-            assert batch_number > 0
+                    break
+                raise RuntimeError(f"Can't allocate {batch_number} batches")
     kwargs.pop("ensure_batch_size_cover", None)
     return NeighborLoader(
         data=util.get_graph(0),
