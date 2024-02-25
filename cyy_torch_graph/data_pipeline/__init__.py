@@ -34,8 +34,8 @@ def get_dataloader(
     if not kwargs.get("sample_neighbor", True):
         return RandomNodeLoader(node_indices=input_nodes.tolist(), **kwargs)
 
-    ensure_batch_size_cover = kwargs.pop("ensure_batch_size_cover", True)
     if "batch_number" in kwargs:
+        ensure_batch_size_cover = kwargs.get("ensure_batch_size_cover", False)
         batch_number = kwargs.pop("batch_number")
         assert batch_number > 0
         input_number = input_nodes.numel()
@@ -47,14 +47,15 @@ def get_dataloader(
                 kwargs["batch_size"] -= 1
                 assert kwargs["batch_size"] >= 1
             if kwargs["batch_size"] * batch_number >= input_number:
+                if not ensure_batch_size_cover:
+                    kwargs["drop_last"] = True
+                    get_logger().warning("drop_last is used")
                 break
             if not ensure_batch_size_cover:
                 break
             batch_number -= 1
             assert batch_number > 0
-    if not ensure_batch_size_cover:
-        kwargs["drop_last"] = True
-        get_logger().warning("drop_last is used")
+    kwargs.pop("ensure_batch_size_cover")
     return NeighborLoader(
         data=util.get_graph(0),
         num_neighbors=[kwargs.pop("num_neighbor", 10)] * model_evaluator.neighbour_hop,
