@@ -26,7 +26,7 @@ def get_dataloader(
     util = dc.get_dataset_util(phase=phase)
     assert isinstance(util, GraphDatasetUtil)
     pyg_input_nodes = kwargs.pop("pyg_input_nodes", {})
-    if pyg_input_nodes:
+    if pyg_input_nodes and phase in pyg_input_nodes:
         input_nodes = pyg_input_nodes[phase]
     else:
         input_nodes = torch_geometric.utils.mask_to_index(util.get_mask()[0])
