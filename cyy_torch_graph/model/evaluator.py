@@ -67,9 +67,7 @@ class GraphModelEvaluator(ModelEvaluator):
         n_id = kwargs.pop("n_id")
         batch_mask = kwargs.pop("batch_mask")
         if kwargs.pop("need_sample_indices", False):
-            extra_res = {
-                "sample_indices": self.get_mask_indices(
-                    phase=kwargs["phase"]
-                ).intersection(set(n_id.tolist()))
-            }
+            mask_indices = self.get_mask_indices(phase=kwargs["phase"])
+            sample_indices = [index for index in n_id.tolist() if index in mask_indices]
+            extra_res = {"sample_indices": sample_indices}
         return super()._compute_loss(output=output[batch_mask], **kwargs) | extra_res
