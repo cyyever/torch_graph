@@ -11,6 +11,7 @@ from cyy_torch_toolbox.dataset.util import global_dataset_util_factor
 from ogb.nodeproppred import PygNodePropPredDataset
 
 from .collection import GraphDatasetCollection
+from .partition import METIS
 from .util import GraphDatasetUtil
 
 
