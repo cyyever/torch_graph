@@ -1,13 +1,15 @@
 import torch
 from torch import Tensor
-from torch_geometric.data import Data
 from torch_geometric.typing import pyg_lib
 from torch_geometric.utils import sort_edge_index
 from torch_geometric.utils.sparse import index2ptr
 
 
 def METIS(
-    data: Data, num_parts: int, edge_weight: torch.Tensor | None = None
+    edge_index: Tensor,
+    num_nodes: int,
+    num_parts: int,
+    edge_weight: torch.Tensor | None = None,
 ) -> Tensor:
     r"""Partitions a graph data object into multiple subgraphs""
     .. note::
@@ -19,10 +21,6 @@ def METIS(
             recursive bisection instead of multilevel k-way partitioning.
             (default: :obj:`False`)
     """
-    edge_index = data.edge_index
-    assert edge_index is not None
-    num_nodes = data.num_nodes
-    assert num_nodes is not None
     # Computes a node-level partition assignment vector via METIS.
 
     # Calculate CSR representation:
