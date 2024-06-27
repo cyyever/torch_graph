@@ -1,7 +1,7 @@
 import torch
 from torch import Tensor
 from torch_geometric.typing import pyg_lib
-from torch_geometric.utils import sort_edge_index
+from torch_geometric.utils import is_undirected, sort_edge_index, to_undirected
 from torch_geometric.utils.sparse import index2ptr
 
 
@@ -24,8 +24,12 @@ def METIS(
     # Computes a node-level partition assignment vector via METIS.
 
     # Calculate CSR representation:
+    if not is_undirected(edge_index):
+        edge_index = to_undirected(edge_index)
     row, col = sort_edge_index(edge_index, num_nodes=num_nodes)
     rowptr = index2ptr(row, size=num_nodes)
+    if edge_weight is not None:
+        assert edge_weight.dtype == torch.long
 
     # Compute METIS partitioning:
     cluster = pyg_lib.partition.metis(
