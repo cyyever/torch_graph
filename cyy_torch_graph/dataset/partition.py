@@ -32,10 +32,10 @@ def METIS(
         assert edge_weight.dtype == torch.long
 
     # Compute METIS partitioning:
-    cluster = pyg_lib.partition.metis(
+    return pyg_lib.partition.metis(
         rowptr=rowptr.cpu(),
         col=col.cpu(),
         num_partitions=num_parts,
         edge_weight=edge_weight,
-    ).to(edge_index.device)
-    return cluster
+        recursive=True,
+    )
