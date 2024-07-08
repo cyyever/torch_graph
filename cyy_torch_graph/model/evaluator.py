@@ -8,6 +8,8 @@ from cyy_torch_toolbox import (DatasetCollection, MachineLearningPhase,
                                ModelEvaluator)
 from cyy_torch_toolbox.tensor import tensor_to
 
+from ..dataset import GraphDatasetUtil
+
 
 class GraphModelEvaluator(ModelEvaluator):
     def __init__(self, dataset_collection: DatasetCollection, **kwargs: Any) -> None:
@@ -16,6 +18,11 @@ class GraphModelEvaluator(ModelEvaluator):
         self.__masks: dict = {}
         self.__mask_indices: dict = {}
         get_logger().debug("use neighbour_hop %s", self.neighbour_hop)
+
+    def get_dataset_util(self, phase: MachineLearningPhase) -> GraphDatasetUtil:
+        util = self.__dc.get_dataset_util(phase=phase)
+        assert isinstance(util, GraphDatasetUtil)
+        return util
 
     @property
     def neighbour_hop(self):
@@ -31,7 +38,7 @@ class GraphModelEvaluator(ModelEvaluator):
         if kwargs["y"].shape[0] != kwargs["x"].shape[0]:
             assert (
                 kwargs["y"].shape[0]
-                == self.__dc.get_dataset_util(phase=kwargs["phase"])
+                == self.get_dataset_util(phase=kwargs["phase"])
                 .get_original_graph(0)
                 .y.shape[0]
             )
@@ -48,7 +55,7 @@ class GraphModelEvaluator(ModelEvaluator):
     def get_mask(self, phase: MachineLearningPhase, device) -> torch.Tensor:
         mask = self.__masks.get(phase, None)
         if mask is None:
-            mask = self.__dc.get_dataset_util(phase=phase).get_mask()[0]
+            mask = self.get_dataset_util(phase=phase).get_mask()[0]
             self.__masks[phase] = mask.to(device=device, non_blocking=True)
         assert mask is not None
         return mask
@@ -62,7 +69,7 @@ class GraphModelEvaluator(ModelEvaluator):
         )
         return self.__mask_indices[phase]
 
-    def _compute_loss(self, output: torch.Tensor, **kwargs: Any) -> dict:
+    def _compute_loss(self, **kwargs: Any) -> dict:
         extra_res = {}
         n_id = kwargs.pop("n_id")
         batch_mask = kwargs.pop("batch_mask")
@@ -70,4 +77,11 @@ class GraphModelEvaluator(ModelEvaluator):
             mask_indices = self.get_mask_indices(phase=kwargs["phase"])
             sample_indices = [index for index in n_id.tolist() if index in mask_indices]
             extra_res = {"sample_indices": sample_indices}
-        return super()._compute_loss(output=output[batch_mask], **kwargs) | extra_res
+        return (
+            super()._compute_loss(
+                output=kwargs.pop("output")[batch_mask],
+                targets=kwargs.pop("targets"),
+                **kwargs,
+            )
+            | extra_res
+        )
