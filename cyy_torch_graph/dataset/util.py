@@ -110,7 +110,6 @@ class GraphDatasetUtil(DatasetUtil):
         assert node_indices
         node_indices = torch.tensor(list(node_indices))
         result = []
-        assert isinstance(self.dataset, GraphDataset)
         for idx, graph_dict in enumerate(self.dataset):
             if isinstance(graph_dict, dict):
                 tmp = graph_dict.copy()
@@ -127,7 +126,6 @@ class GraphDatasetUtil(DatasetUtil):
 
     def get_edge_subset(self, graph_index: int, edge_index: torch.Tensor) -> list[dict]:
         result = []
-        assert isinstance(self.dataset, GraphDataset)
         for idx, graph_dict in enumerate(self.dataset):
             if isinstance(graph_dict, dict):
                 tmp = graph_dict.copy()
