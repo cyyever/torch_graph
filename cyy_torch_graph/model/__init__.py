@@ -29,9 +29,9 @@ def get_model(
 
 
 model_constructors = get_model_info().get(DatasetType.Graph, {})
-for name, model_constructor_info in model_constructors.items():
+for name, constructor_info in model_constructors.items():
     if DatasetType.Graph not in global_model_factory:
         global_model_factory[DatasetType.Graph] = Factory()
     global_model_factory[DatasetType.Graph].register(
-        name, functools.partial(get_model, model_constructor_info)
+        name, functools.partial(get_model, constructor_info)
     )
