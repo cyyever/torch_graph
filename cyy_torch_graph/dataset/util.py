@@ -6,6 +6,7 @@ import torch.utils
 import torch_geometric.data
 import torch_geometric.utils
 from cyy_torch_toolbox import DatasetUtil, MachineLearningPhase
+from torch_geometric.data import Dataset as GraphDataset
 
 
 class GraphDatasetUtil(DatasetUtil):
@@ -24,6 +25,7 @@ class GraphDatasetUtil(DatasetUtil):
         if hasattr(self.dataset[0], "mask") or "mask" in self.dataset[0]:
             return [dataset["mask"] for dataset in self.dataset]
         masks = []
+        assert isinstance(self.dataset, GraphDataset)
         for graph_index, graph in enumerate(self.dataset):
             if hasattr(graph, "mask") or "mask" in graph:
                 masks.append(graph["mask"])
@@ -101,13 +103,14 @@ class GraphDatasetUtil(DatasetUtil):
         graph_index = graph_dict["graph_index"]
         return original_dataset[graph_index]
 
-    def get_subset(self, indices: Iterable) -> list[dict]:
+    def get_subset(self, indices: Iterable) -> Any:
         return self.get_node_subset(indices)
 
     def get_node_subset(self, node_indices: Iterable | torch.Tensor) -> list[dict]:
         assert node_indices
         node_indices = torch.tensor(list(node_indices))
         result = []
+        assert isinstance(self.dataset, GraphDataset)
         for idx, graph_dict in enumerate(self.dataset):
             if isinstance(graph_dict, dict):
                 tmp = graph_dict.copy()
@@ -124,6 +127,7 @@ class GraphDatasetUtil(DatasetUtil):
 
     def get_edge_subset(self, graph_index: int, edge_index: torch.Tensor) -> list[dict]:
         result = []
+        assert isinstance(self.dataset, GraphDataset)
         for idx, graph_dict in enumerate(self.dataset):
             if isinstance(graph_dict, dict):
                 tmp = graph_dict.copy()
@@ -150,6 +154,7 @@ class GraphDatasetUtil(DatasetUtil):
         datasets: dict = {}
         for phase, mask_name in mapping.items():
             datasets[phase] = []
+            assert isinstance(self.dataset, GraphDataset)
             for idx, graph in enumerate(self.dataset):
                 datasets[phase].append(
                     {
