@@ -5,8 +5,7 @@ import torch_geometric.nn
 import torch_geometric.utils
 from cyy_naive_lib.log import get_logger
 from cyy_torch_toolbox import (DatasetCollection, MachineLearningPhase,
-                               ModelEvaluator)
-from cyy_torch_toolbox.tensor import tensor_to
+                               ModelEvaluator, tensor_to)
 
 from ..dataset import GraphDatasetUtil
 
@@ -43,7 +42,9 @@ class GraphModelEvaluator(ModelEvaluator):
                 .y.shape[0]
             )
             kwargs["y"] = kwargs["y"].index_select(0, n_id)
-        batch_mask = self.get_mask(phase=kwargs["phase"], device=kwargs["device"])[n_id]
+        batch_mask = self.__get_mask(phase=kwargs["phase"], device=kwargs["device"])[
+            n_id
+        ]
 
         y = tensor_to(
             kwargs["y"], device=kwargs["device"], non_blocking=kwargs["non_blocking"]
@@ -52,7 +53,7 @@ class GraphModelEvaluator(ModelEvaluator):
         kwargs["batch_mask"] = batch_mask
         return super().__call__(inputs=inputs, **kwargs)
 
-    def get_mask(self, phase: MachineLearningPhase, device) -> torch.Tensor:
+    def __get_mask(self, phase: MachineLearningPhase, device) -> torch.Tensor:
         mask = self.__masks.get(phase, None)
         if mask is None:
             mask = self.get_dataset_util(phase=phase).get_mask()[0]
@@ -60,7 +61,7 @@ class GraphModelEvaluator(ModelEvaluator):
         assert mask is not None
         return mask
 
-    def get_mask_indices(self, phase: MachineLearningPhase) -> set:
+    def __get_mask_indices(self, phase: MachineLearningPhase) -> set:
         mask_indices = self.__mask_indices.get(phase, None)
         if mask_indices is not None:
             return mask_indices
@@ -74,7 +75,7 @@ class GraphModelEvaluator(ModelEvaluator):
         n_id = kwargs.pop("n_id")
         batch_mask = kwargs.pop("batch_mask")
         if kwargs.pop("need_sample_indices", False):
-            mask_indices = self.get_mask_indices(phase=kwargs["phase"])
+            mask_indices = self.__get_mask_indices(phase=kwargs["phase"])
             sample_indices = [index for index in n_id.tolist() if index in mask_indices]
             extra_res = {"sample_indices": sample_indices}
         return (
