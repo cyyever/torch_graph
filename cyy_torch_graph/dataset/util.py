@@ -43,13 +43,24 @@ class GraphDatasetUtil(DatasetUtil):
             masks.append(mask)
         return masks
 
-    def get_edge_masks(self) -> list[torch.Tensor]:
+    def get_edge_masks(
+        self, edge_index: torch.Tensor | None = None
+    ) -> list[torch.Tensor]:
         node_masks = self.get_node_mask()
         masks = []
         for graph_index, node_mask in enumerate(node_masks):
-            edge_index = self.get_edge_index(graph_index=graph_index)
+            if edge_index is None:
+                edge_index = self.get_edge_index(graph_index=graph_index)
             masks.append(node_mask[edge_index[0]] & node_mask[edge_index[1]])
         return masks
+
+    def get_masked_edge_index(
+        self, graph_index: int, edge_index: torch.Tensor | None = None
+    ) -> torch.Tensor:
+        if edge_index is None:
+            edge_index = self.get_edge_index(graph_index=graph_index)
+        edge_mask = self.get_edge_masks(edge_index=edge_index)[graph_index]
+        return edge_index[:, edge_mask]
 
     def get_raw_samples(self, indices: Iterable | None = None) -> Generator:
         if indices is not None:
