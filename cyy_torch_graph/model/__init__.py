@@ -10,6 +10,7 @@ from cyy_torch_toolbox.model.repositary import get_model_info
 
 from .evaluator import GraphModelEvaluator
 
+__all__ = ["GraphModelEvaluator"]
 global_model_evaluator_factory.register(DatasetType.Graph, GraphModelEvaluator)
 
 

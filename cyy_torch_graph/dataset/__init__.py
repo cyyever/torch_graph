@@ -14,6 +14,8 @@ from .collection import GraphDatasetCollection
 from .partition import METIS
 from .util import GraphDatasetUtil
 
+__all__ = ["GraphDatasetCollection", "METIS", "GraphDatasetUtil"]
+
 
 def register_graph_dataset_constructors() -> None:
     dataset_constructors: dict = {}
