@@ -3,7 +3,7 @@ from typing import Any
 import torch
 import torch_geometric.nn
 import torch_geometric.utils
-from cyy_naive_lib.log import get_logger
+from cyy_naive_lib.log import log_debug
 from cyy_torch_toolbox import (DatasetCollection, MachineLearningPhase,
                                ModelEvaluator, tensor_to)
 
@@ -17,7 +17,7 @@ class GraphModelEvaluator(ModelEvaluator):
         self.__masks: dict = {}
         self.__mask_indices: dict = {}
         self.__n_id: None | torch.Tensor = None
-        get_logger().debug("use neighbour_hop %s", self.neighbour_hop)
+        log_debug("use neighbour_hop %s", self.neighbour_hop)
 
     def get_dataset_util(self, phase: MachineLearningPhase) -> GraphDatasetUtil:
         util = self.__dc.get_dataset_util(phase=phase)
