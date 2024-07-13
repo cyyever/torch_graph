@@ -16,12 +16,18 @@ class GraphModelEvaluator(ModelEvaluator):
         self.__dc = dataset_collection
         self.__masks: dict = {}
         self.__mask_indices: dict = {}
+        self.__n_id: None | torch.Tensor = None
         get_logger().debug("use neighbour_hop %s", self.neighbour_hop)
 
     def get_dataset_util(self, phase: MachineLearningPhase) -> GraphDatasetUtil:
         util = self.__dc.get_dataset_util(phase=phase)
         assert isinstance(util, GraphDatasetUtil)
         return util
+
+    @property
+    def n_id(self) -> torch.Tensor:
+        assert self.__n_id is not None
+        return self.__n_id
 
     @property
     def neighbour_hop(self):
@@ -32,8 +38,12 @@ class GraphModelEvaluator(ModelEvaluator):
         return self.__from_neighbor_loader(**kwargs)
 
     def __from_neighbor_loader(self, **kwargs: Any) -> dict:
-        n_id = kwargs["n_id"]
-        inputs = {"edge_index": kwargs["edge_index"], "x": kwargs["x"], "n_id": n_id}
+        self.__n_id = kwargs["n_id"]
+        inputs = {
+            "edge_index": kwargs["edge_index"],
+            "x": kwargs["x"],
+            "n_id": self.n_id,
+        }
         if kwargs["y"].shape[0] != kwargs["x"].shape[0]:
             assert (
                 kwargs["y"].shape[0]
@@ -41,9 +51,9 @@ class GraphModelEvaluator(ModelEvaluator):
                 .get_original_graph(0)
                 .y.shape[0]
             )
-            kwargs["y"] = kwargs["y"].index_select(0, n_id)
+            kwargs["y"] = kwargs["y"].index_select(0, self.n_id)
         batch_mask = self.__get_mask(phase=kwargs["phase"], device=kwargs["device"])[
-            n_id
+            self.n_id
         ]
 
         y = tensor_to(
@@ -78,6 +88,7 @@ class GraphModelEvaluator(ModelEvaluator):
             mask_indices = self.__get_mask_indices(phase=kwargs["phase"])
             sample_indices = [index for index in n_id.tolist() if index in mask_indices]
             extra_res = {"sample_indices": sample_indices}
+        self.__n_id = None
         return (
             super()._compute_loss(
                 output=kwargs.pop("output")[batch_mask],
