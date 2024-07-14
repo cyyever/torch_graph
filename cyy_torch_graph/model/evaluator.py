@@ -94,7 +94,6 @@ class GraphModelEvaluator(ModelEvaluator):
             mask_indices = self.__get_mask_indices(phase=kwargs["phase"])
             sample_indices = [index for index in n_id.tolist() if index in mask_indices]
             extra_res = {"sample_indices": sample_indices}
-        self.__n_id = None
         return (
             super()._compute_loss(
                 output=kwargs.pop("output")[batch_mask],
