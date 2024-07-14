@@ -38,7 +38,7 @@ class GraphModelEvaluator(ModelEvaluator):
         return self.__from_neighbor_loader(**kwargs)
 
     def __from_neighbor_loader(self, **kwargs: Any) -> dict:
-        self.__n_id = kwargs["n_id"]
+        self.__n_id = kwargs["n_id"].to(kwargs["device"], non_blocking=True)
         inputs = {
             "edge_index": kwargs["edge_index"],
             "x": kwargs["x"],
@@ -63,11 +63,17 @@ class GraphModelEvaluator(ModelEvaluator):
         kwargs["batch_mask"] = batch_mask
         return super().__call__(inputs=inputs, **kwargs)
 
-    def __get_mask(self, phase: MachineLearningPhase, device) -> torch.Tensor:
+    def __get_mask(
+        self, phase: MachineLearningPhase, device: torch.device
+    ) -> torch.Tensor:
         mask = self.__masks.get(phase, None)
         if mask is None:
-            mask = self.get_dataset_util(phase=phase).get_mask()[0]
-            self.__masks[phase] = mask.to(device=device, non_blocking=True)
+            mask = (
+                self.get_dataset_util(phase=phase)
+                .get_mask()[0]
+                .to(device=device, non_blocking=True)
+            )
+            self.__masks[phase] = mask
         assert mask is not None
         return mask
 
