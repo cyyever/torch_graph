@@ -130,7 +130,7 @@ class GraphDatasetUtil(DatasetUtil):
                     "original_dataset": self.dataset,
                 }
             tmp["mask"] = torch_geometric.utils.index_to_mask(
-                node_indices, size=self.get_mask()[idx].shape[0]
+                node_indices, size=self.get_original_graph(idx).x.shape[0]
             )
             result.append(tmp)
         return result
