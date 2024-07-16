@@ -11,7 +11,7 @@ from cyy_torch_toolbox.data_pipeline import global_data_transform_factory
 from cyy_torch_toolbox.data_pipeline.loader import global_dataloader_factory
 from torch_geometric.loader import NeighborLoader
 
-from ..dataset import GraphDatasetCollection, GraphDatasetUtil
+from ..dataset import GraphDatasetUtil
 from ..model import GraphModelEvaluator
 from .pyg_dataloader import RandomNodeLoader
 from .transform import pyg_data_extraction
@@ -23,7 +23,6 @@ def get_dataloader(
     model_evaluator: GraphModelEvaluator,
     **kwargs,
 ) -> torch.utils.data.DataLoader:
-    assert isinstance(dc, GraphDatasetCollection)
     util = dc.get_dataset_util(phase=phase)
     assert isinstance(util, GraphDatasetUtil)
     pyg_input_nodes = kwargs.pop("pyg_input_nodes", {})
