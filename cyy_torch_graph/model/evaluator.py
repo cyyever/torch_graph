@@ -35,9 +35,6 @@ class GraphModelEvaluator(ModelEvaluator):
 
     def __call__(self, **kwargs: Any) -> dict:
         assert "batch_node_indices" not in kwargs
-        return self.__from_neighbor_loader(**kwargs)
-
-    def __from_neighbor_loader(self, **kwargs: Any) -> dict:
         self.__n_id = kwargs["n_id"].to(kwargs["device"], non_blocking=True)
         inputs = {
             "edge_index": kwargs["edge_index"],
