@@ -22,7 +22,7 @@ def register_graph_dataset_constructors() -> None:
     for repository in [torch_geometric.datasets]:
         dataset_constructors |= get_class_attrs(
             repository,
-            filter_fun=lambda k, v: issubclass(v, torch.utils.data.Dataset),
+            filter_fun=lambda _, v: issubclass(v, torch.utils.data.Dataset),
         )
     for parent_dataset, sub_dataset_list in {
         "Planetoid": ["Cora", "CiteSeer", "PubMed"],
