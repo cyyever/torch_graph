@@ -1,7 +1,6 @@
 import functools
 
-from cyy_torch_toolbox import (DatasetCollection, DatasetType,
-                               MachineLearningPhase)
+from cyy_torch_toolbox import DatasetCollection, DatasetType
 from cyy_torch_toolbox.factory import Factory
 from cyy_torch_toolbox.model import (create_model,
                                      global_model_evaluator_factory,
@@ -19,9 +18,11 @@ def get_model(
 ) -> dict:
     final_model_kwargs: dict = kwargs
     if "num_features" not in kwargs:
-        final_model_kwargs["num_features"] = dataset_collection.get_original_dataset(
-            phase=MachineLearningPhase.Training
-        ).num_features
+        final_model_kwargs["num_features"] = (
+            dataset_collection.get_any_dataset_util()
+            .get_original_dataset()
+            .num_features
+        )
     return {
         "model": create_model(
             model_constructor_info["constructor"], **final_model_kwargs
