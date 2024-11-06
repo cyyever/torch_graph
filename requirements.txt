@@ -6,7 +6,7 @@ psutil
 FileLock-git
 requests
 tqdm
-torch>=2.0
+torch>=2.5
 nvidia-ml-py
 torchmetrics
 torch_geometric
