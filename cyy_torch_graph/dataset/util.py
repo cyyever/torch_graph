@@ -1,5 +1,5 @@
-from collections.abc import Iterable
-from typing import Any, Generator
+from collections.abc import Generator, Iterable
+from typing import Any
 
 import torch
 import torch.utils

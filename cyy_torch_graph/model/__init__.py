@@ -2,9 +2,11 @@ import functools
 
 from cyy_torch_toolbox import DatasetCollection, DatasetType
 from cyy_torch_toolbox.factory import Factory
-from cyy_torch_toolbox.model import (create_model,
-                                     global_model_evaluator_factory,
-                                     global_model_factory)
+from cyy_torch_toolbox.model import (
+    create_model,
+    global_model_evaluator_factory,
+    global_model_factory,
+)
 from cyy_torch_toolbox.model.repositary import get_model_info
 
 from .evaluator import GraphModelEvaluator
