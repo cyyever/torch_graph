@@ -10,6 +10,18 @@ from cyy_torch_toolbox.dataset.repository import register_dataset_constructors
 from cyy_torch_toolbox.dataset.util import global_dataset_util_factor
 from ogb.nodeproppred import PygNodePropPredDataset
 
+import torch
+
+try:
+    import torch_geometric.data.data
+    import torch_geometric.data.storage
+
+    torch.serialization.add_safe_globals([torch_geometric.data.data.DataEdgeAttr])
+    torch.serialization.add_safe_globals([torch_geometric.data.data.DataTensorAttr])
+    torch.serialization.add_safe_globals([torch_geometric.data.storage.GlobalStorage])
+except BaseException:
+    pass
+
 from .collection import GraphDatasetCollection
 from .partition import METIS
 from .util import GraphDatasetUtil
