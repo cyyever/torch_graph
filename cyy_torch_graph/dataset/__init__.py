@@ -10,8 +10,6 @@ from cyy_torch_toolbox.dataset.repository import register_dataset_constructors
 from cyy_torch_toolbox.dataset.util import global_dataset_util_factor
 from ogb.nodeproppred import PygNodePropPredDataset
 
-import torch
-
 try:
     import torch_geometric.data.data
     import torch_geometric.data.storage
