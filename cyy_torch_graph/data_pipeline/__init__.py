@@ -4,7 +4,7 @@ import torch
 import torch.utils.data
 import torch_geometric
 import torch_geometric.utils
-from cyy_naive_lib.log import get_logger
+from cyy_naive_lib.log import log_warning
 from cyy_torch_toolbox import (
     DatasetCollection,
     DatasetType,
@@ -54,7 +54,7 @@ def get_dataloader(
                 break
             if not ensure_batch_size_cover:
                 kwargs["drop_last"] = True
-                get_logger().warning("drop_last is used")
+                log_warning("drop_last is used")
                 break
             raise RuntimeError(f"Can't allocate {batch_number} batches")
     kwargs.pop("ensure_batch_size_cover", None)
