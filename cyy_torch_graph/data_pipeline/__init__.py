@@ -10,8 +10,8 @@ from cyy_torch_toolbox import (
     DatasetType,
     MachineLearningPhase,
     TransformType,
+    global_data_transform_factory,
 )
-from cyy_torch_toolbox.data_pipeline import global_data_transform_factory
 from cyy_torch_toolbox.data_pipeline.loader import global_dataloader_factory
 from torch_geometric.loader import NeighborLoader
 

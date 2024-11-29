@@ -45,3 +45,4 @@ select = [
     # isort
     "I",
 ]
+ignore = ["F401","E501","F403"]

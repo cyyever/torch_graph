@@ -51,10 +51,14 @@ def register_graph_dataset_constructors() -> None:
             dataset_constructors[f"{parent_dataset}_{name}"] = constructor
 
     for name, constructor in dataset_constructors.items():
-        register_dataset_constructors(DatasetType.Graph, name, constructor)
+        register_dataset_constructors(
+            dataset_type=DatasetType.Graph, name=name, constructor=constructor
+        )
     for name in ("ogbn-products",):
         constructor = functools.partial(PygNodePropPredDataset, name=name)
-        register_dataset_constructors(DatasetType.Graph, name, constructor)
+        register_dataset_constructors(
+            dataset_type=DatasetType.Graph, name=name, constructor=constructor
+        )
 
 
 register_graph_dataset_constructors()

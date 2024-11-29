@@ -72,10 +72,13 @@ class GraphDatasetUtil(DatasetUtil):
             if not flag:
                 continue
             if indices is None or idx in indices:
-                yield idx, {
-                    "target": targets[idx],
-                    "index": idx,
-                }
+                yield (
+                    idx,
+                    {
+                        "target": targets[idx],
+                        "index": idx,
+                    },
+                )
 
     def get_targets(self, graph_index: int) -> torch.Tensor:
         targets = self.get_original_graph(graph_index).y
