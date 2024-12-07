@@ -9,7 +9,7 @@ from cyy_torch_toolbox import (
     DatasetCollection,
     DatasetType,
     MachineLearningPhase,
-    TransformType,
+    Transform,
     global_data_transform_factory,
 )
 from cyy_torch_toolbox.data_pipeline.loader import global_dataloader_factory
@@ -70,13 +70,9 @@ def get_dataloader(
 global_dataloader_factory.register(DatasetType.Graph, get_dataloader)
 
 
-def append_transforms_to_dc(dc, model_evaluator=None) -> None:
-    if model_evaluator is None:
-        for _, transform in dc.foreach_transform():
-            transform.clear(TransformType.ExtractData)
-            transform.append(
-                key=TransformType.ExtractData, transform=pyg_data_extraction
-            )
+def append_transforms_to_dc(dc: DatasetCollection, model_evaluator) -> None:
+    dc.clear_pipelines()
+    dc.append_named_transform(Transform(fun=pyg_data_extraction))
 
 
 global_data_transform_factory.register(DatasetType.Graph, append_transforms_to_dc)
