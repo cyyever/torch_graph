@@ -1,9 +1,7 @@
 from typing import Any
 
-from cyy_torch_toolbox import default_data_extraction
 
-
-def pyg_data_extraction(data: Any) -> dict:
+def pyg_data_extraction(data: Any) -> Any:
     assert "input" not in data
     match data:
         case {
@@ -15,4 +13,4 @@ def pyg_data_extraction(data: Any) -> dict:
                 "input": graph,
                 "target": graph.y,
             }
-    return default_data_extraction(data)
+    return data

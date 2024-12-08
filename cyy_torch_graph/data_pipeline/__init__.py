@@ -71,8 +71,7 @@ global_dataloader_factory.register(DatasetType.Graph, get_dataloader)
 
 
 def append_transforms_to_dc(dc: DatasetCollection, model_evaluator) -> None:
-    dc.clear_pipelines()
-    dc.append_named_transform(Transform(fun=pyg_data_extraction))
+    dc.prepend_named_transform(Transform(fun=pyg_data_extraction))
 
 
 global_data_transform_factory.register(DatasetType.Graph, append_transforms_to_dc)
