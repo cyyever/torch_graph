@@ -27,6 +27,8 @@ def get_dataloader(
     model_evaluator: GraphModelEvaluator,
     **kwargs,
 ) -> torch.utils.data.DataLoader:
+    kwargs.pop("data_device", None)
+    kwargs.pop("generator", None)
     util = dc.get_dataset_util(phase=phase)
     assert isinstance(util, GraphDatasetUtil)
     pyg_input_nodes = kwargs.pop("pyg_input_nodes", {})
