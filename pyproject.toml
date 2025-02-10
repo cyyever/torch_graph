@@ -19,13 +19,6 @@ classifiers = [
 [project.urls]
 Repository = "https://github.com/cyyever/torch_graph"
 
-[tool.pyright]
-include = ["cyy_torch_graph"]
-defineConstant = { DEBUG = true }
-
-reportMissingImports = true
-reportMissingTypeStubs = false
-
 [tool.ruff]
 target-version = "py312"
 src = ["cyy_torch_graph"]
@@ -45,4 +38,4 @@ select = [
     # isort
     "I",
 ]
-ignore = ["F401","E501","F403"]
+ignore = ["F403"]
