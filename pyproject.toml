@@ -15,6 +15,12 @@ classifiers = [
   "Programming Language :: Python"
 ]
 
+dependencies = [
+"cyy_torch_toolbox@git+https://git@github.com/cyyever/torch_toolbox.git@main",
+  "torch_geometric",
+  "networkx",
+  "ogb",
+]
 
 [project.urls]
 Repository = "https://github.com/cyyever/torch_graph"
