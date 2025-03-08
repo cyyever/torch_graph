@@ -1,4 +1,0 @@
-ogb
-torch_geometric
-pyg-lib@git+https://github.com/pyg-team/pyg-lib.git@master
-cyy_torch_toolbox@git+https://github.com/cyyever/torch_toolbox.git@main
