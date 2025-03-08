@@ -21,11 +21,16 @@ class GraphDatasetUtil(DatasetUtil):
     def get_mask(self) -> list[torch.Tensor]:
         return self.get_node_mask()
 
+    @property
+    def dataset(self) -> GraphDataset:
+        super_dataset = super().dataset
+        assert isinstance(super_dataset, GraphDataset)
+        return super_dataset
+
     def get_node_mask(self) -> list[torch.Tensor]:
         if hasattr(self.dataset[0], "mask") or "mask" in self.dataset[0]:
             return [dataset["mask"] for dataset in self.dataset]
         masks = []
-        assert isinstance(self.dataset, GraphDataset)
         for graph_index, graph in enumerate(self.dataset):
             if hasattr(graph, "mask") or "mask" in graph:
                 masks.append(graph["mask"])
@@ -166,7 +171,6 @@ class GraphDatasetUtil(DatasetUtil):
         datasets: dict = {}
         for phase, mask_name in mapping.items():
             datasets[phase] = []
-            assert isinstance(self.dataset, GraphDataset)
             for idx, graph in enumerate(self.dataset):
                 datasets[phase].append(
                     {
