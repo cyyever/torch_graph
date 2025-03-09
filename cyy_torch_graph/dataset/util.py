@@ -22,9 +22,9 @@ class GraphDatasetUtil(DatasetUtil):
         return self.get_node_mask()
 
     @property
-    def dataset(self) -> GraphDataset:
+    def dataset(self) -> GraphDataset | list:
         super_dataset = super().dataset
-        assert isinstance(super_dataset, GraphDataset)
+        assert isinstance(super_dataset, GraphDataset | list)
         return super_dataset
 
     def get_node_mask(self) -> list[torch.Tensor]:

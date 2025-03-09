@@ -17,6 +17,7 @@ classifiers = [
 
 dependencies = [
   "cyy_torch_toolbox@git+https://git@github.com/cyyever/torch_toolbox.git@main",
+  "pyg-lib",
   "torch_geometric",
   "networkx",
   "ogb",
