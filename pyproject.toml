@@ -10,6 +10,7 @@ authors = [
 classifiers = ["Programming Language :: Python"]
 dependencies = [
   "cyy_torch_toolbox@git+https://git@github.com/cyyever/torch_toolbox.git@main",
+  "cyy_preprocessing_pipeline@git+https://git@github.com/cyyever/preprocessing_pipeline.git@main",
   "networkx",
   "ogb",
   "torch_geometric",

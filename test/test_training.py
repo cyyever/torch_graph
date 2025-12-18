@@ -12,7 +12,6 @@ def test_graph_training() -> None:
     config.hyper_parameter_config.epoch = 1
     config.hyper_parameter_config.learning_rate = 0.01
     trainer = config.create_trainer()
-    # trainer.model_with_loss.compile_model()
     trainer.append_named_hook(
         ExecutorHookPoint.AFTER_BATCH, "stop_training", stop_training
     )
