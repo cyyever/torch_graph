@@ -3,7 +3,7 @@ from typing import Any
 import torch
 import torch_geometric.nn
 import torch_geometric.utils
-from cyy_naive_lib.log import log_debug
+from cyy_naive_lib.log import log_debug, log_error
 from cyy_torch_toolbox import (
     DatasetCollection,
     MachineLearningPhase,
@@ -30,6 +30,7 @@ class GraphModelEvaluator(ModelEvaluator):
 
     @property
     def n_id(self) -> torch.Tensor:
+        log_error("%s get n_id %s", id(self), id(self.__n_id))
         assert self.__n_id is not None
         return self.__n_id
 
@@ -40,6 +41,8 @@ class GraphModelEvaluator(ModelEvaluator):
     def __call__(self, **kwargs: Any) -> dict:
         assert "batch_node_indices" not in kwargs
         self.__n_id = kwargs["n_id"].to(kwargs["device"], non_blocking=True)
+        log_error("%s set n_id %s", id(self), id(self.__n_id))
+        assert self.__n_id is not None
         inputs = {
             "edge_index": kwargs["edge_index"],
             "x": kwargs["x"],

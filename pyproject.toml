@@ -1,32 +1,26 @@
+[project]
+name = "cyy_torch_graph"
+version = "0.2"
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.12"
+license = { text = "BSD License" }
+authors = [
+  { name = "cyy", email = "cyyever@outloo.com" },
+]
+classifiers = ["Programming Language :: Python"]
+dependencies = [
+  "cyy_torch_toolbox@git+https://git@github.com/cyyever/torch_toolbox.git@main",
+  "networkx",
+  "ogb",
+  "torch_geometric",
+]
+
+[project.urls]
+Repository = "https://github.com/cyyever/torch_graph"
+
 [build-system]
 requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
-
-[project]
-name = "cyy_torch_graph"
-version = "0.1"
-requires-python = ">=3.12"
-readme = {file = "README.md", content-type = "text/markdown"}
-authors = [
-{name = "cyy", email = "cyyever@outloo.com"},
-]
-license = {text = "BSD License"}
-classifiers = [
-  "Programming Language :: Python"
-]
-
-dependencies = [
-  "cyy_torch_toolbox@git+https://git@github.com/cyyever/torch_toolbox.git@main",
-  "pyg-lib",
-  "torch_geometric",
-  "networkx",
-  "ogb",
-]
-
-[tool.setuptools.package-data]
-cyy_torch_graph= ["py.typed"]
-[project.urls]
-Repository = "https://github.com/cyyever/torch_graph"
 
 [tool.ruff]
 target-version = "py312"
@@ -48,3 +42,6 @@ select = [
   "I",
 ]
 ignore = ["F403"]
+
+[tool.setuptools.package-data]
+cyy_torch_graph = ["py.typed"]
