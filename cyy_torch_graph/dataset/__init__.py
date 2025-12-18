@@ -5,9 +5,11 @@ import torch.utils.data
 import torch_geometric.datasets
 from cyy_naive_lib.reflection import get_class_attrs, get_kwarg_names
 from cyy_torch_toolbox import DatasetType
-from cyy_torch_toolbox.dataset import global_dataset_collection_factory
+from cyy_torch_toolbox.dataset import (
+    global_dataset_collection_factory,
+    global_dataset_util_factor,
+)
 from cyy_torch_toolbox.dataset.repository import register_dataset_constructors
-from cyy_torch_toolbox.dataset.util import global_dataset_util_factor
 from ogb.nodeproppred import PygNodePropPredDataset
 
 try:
