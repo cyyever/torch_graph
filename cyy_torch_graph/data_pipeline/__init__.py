@@ -5,11 +5,11 @@ import torch.utils.data
 import torch_geometric
 import torch_geometric.utils
 from cyy_naive_lib.log import log_warning
+from cyy_preprocessing_pipeline import Transform
 from cyy_torch_toolbox import (
     DatasetCollection,
     DatasetType,
     MachineLearningPhase,
-    Transform,
     global_data_transform_factory,
 )
 from cyy_torch_toolbox.data_pipeline.loader import global_dataloader_factory
