@@ -4,11 +4,11 @@ import torch
 import torch_geometric.nn
 import torch_geometric.utils
 from cyy_naive_lib.log import log_debug, log_error
+from cyy_preprocessing_pipeline import tensor_to
 from cyy_torch_toolbox import (
     DatasetCollection,
     MachineLearningPhase,
     ModelEvaluator,
-    tensor_to,
 )
 
 from ..dataset import GraphDatasetUtil
